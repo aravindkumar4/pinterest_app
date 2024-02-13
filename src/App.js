@@ -9,12 +9,13 @@ import {
   QuestionMark,
 } from "@mui/icons-material";
 import MenuContainer from "./Components/MenuContainer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Pin from "./Components/Pin";
 
 import Data from "./Components/Data";
 
 function App() {
+  const [searchQuery,setSearchQuery] = useState('')
   useEffect(() => {
     const allIcon = document.querySelectorAll(".iconContainer");
 
@@ -25,7 +26,12 @@ function App() {
 
     allIcon.forEach((n) => n.addEventListener("click", setMenuActive));
   }, []);
-
+  const onInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  }
+  const filteredImages = Data.filter(image => 
+    image.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    console.log('filteredImages',filteredImages);
   return (
     <div className="App">
       <div className="menuContainer">
@@ -55,7 +61,7 @@ function App() {
 
       <main>
         <div className="searchBox">
-          <input type="text" placeholder="Search" />
+          <input type="text" placeholder="Search" onChange={onInputChange} />
           <div className="search">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/codewithvetriapi-c56e3.appspot.com/o/icons8-forward-arrow-100.png?alt=media&token=3f56e775-43c1-41d3-a0c4-90217b31b5be"
@@ -65,8 +71,8 @@ function App() {
         </div>
 
         <div className="mainContainer">
-          {Data &&
-            Data.map((data) => (
+          {filteredImages &&
+            filteredImages.map((data) => (
               <Pin
                 key={data.id}
                 pinSize={data.size}
